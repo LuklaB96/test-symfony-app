@@ -11,33 +11,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PostsController extends AbstractController
 {
-    #[Route(path: "/posts", name: "api_get_posts")]
-    public function getPosts(EntityManagerInterface $entityManager): Response
-    {
-        //get all posts
-        $posts = $entityManager->getRepository(Post::class)->findAll();
-
-        //empty array for posts data organization
-        $postsDataArray = [];
-
-        //organize all posts data
-        foreach ($posts as $post) {
-            $tempPostDataArray = [
-                'id' => $post->getPostId(),
-                'userName' => $post->getUserName(),
-                'title' => $post->getTitle(),
-                'body' => $post->getBody(),
-            ];
-            $postsDataArray[] = $tempPostDataArray;
-        }
-
-        $jsonPostsData = json_encode($postsDataArray);
-
-        //send all posts data as a json to the endpoint
-        return $this->render('api/get_posts.html.twig', [
-            'posts_data' => $jsonPostsData
-        ]);
-    }
     #[Route(path: '/posts/delete/{id}', name: 'delete_post')]
     public function deletePost(int $id, EntityManagerInterface $entityManager): RedirectResponse
     {

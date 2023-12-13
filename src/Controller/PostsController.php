@@ -2,8 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Post;
-use App\DataApihHelpers\ApiDataManager;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\DataApiHelpers\ApiDataManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -72,12 +71,17 @@ class PostsController extends AbstractController
     #[Route(path: "/posts/generate", name: "generate_posts_data")]
     public function generatePostsData(EntityManagerInterface $entityManager): RedirectResponse
     {
-        $apiDataManager = new ApiDataManager($entityManager);
-        //storing information about how many entities has been created
-        $savedPosts = $apiDataManager->SavePostsFromApi();
-        $message = "Generated $savedPosts posts";
-        //send pure json string as a response
-        return $this->redirectToRoute('dashboard', ['message' => $message]);
+        try {
+            $apiDataManager = new ApiDataManager($entityManager);
+            //storing information about how many entities has been created
+            $savedPosts = $apiDataManager->SavePostsFromApi();
+            $message = "Generated $savedPosts posts";
+            //send pure json string as a response
+            return $this->redirectToRoute('dashboard', ['message' => $message]);
+        } catch (\Exception $e) {
+            return $this->redirectToRoute('dashboard', ['message' => $e->getMessage()]);
+        }
+
     }
 }
 ?>

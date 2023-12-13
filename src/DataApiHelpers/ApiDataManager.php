@@ -1,8 +1,7 @@
 <?php
 
-namespace App\DataApihHelpers;
+namespace App\DataApiHelpers;
 
-use App\Entity\User;
 use App\Entity\Post;
 use Doctrine\ORM\EntityManagerInterface;
 

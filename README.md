@@ -32,7 +32,8 @@ Avaible routes:
 http://..host../login
 http://..host../register
 http://..host../lista - dashboard avaible after login with current posts list, every post has delete button, additionally there is a generate posts button. 
-http://..host../posts - get json with all posts avaible in database
+http://..host../api/posts - get all posts
+http://..host../api/posts/{id} - get post with given id
 http://..host../posts/delete/{id} - delete any post from 1-100 range (current known https://jsonplaceholder.typicode.com/posts api limitation)
 http://..host../posts/generate - fill database with posts data that are missing, avaible after login
 ```

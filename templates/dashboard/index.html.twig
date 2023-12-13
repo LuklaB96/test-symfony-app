@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+<div class="main-container">
+    {% if response|default(null) %}
+        <span>Last message: {{response}}</span>
+    {% endif %}
+    {% for sub_array in posts_data_array %}
+    <div class="post-container">
+        <span class="post-id">Post id: {{sub_array.id}}</span>
+        <div class="post-content">
+            <h3>Title: {{sub_array.title}}</h3>
+            <h4>Author: {{sub_array.user_name}}</h4>
+            <span>{{sub_array.body}}</span>
+        </div>
+        <input class="post-delete-btn" id="DeletePostButton" type="button" value="Delete post" onclick="window.location.href='{{ path('delete_post', {id: sub_array.id}) }}'">
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

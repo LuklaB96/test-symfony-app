@@ -27,8 +27,4 @@ return [
     '@hotwired/turbo' => [
         'version' => '7.3.0',
     ],
-    'jquery' => [
-        'path' => './assets/js/jquery.min.js',
-        'entrypoint' => true,
-    ],
 ];

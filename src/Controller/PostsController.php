@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\DataApihHelpers\ApiDataManager;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -19,7 +21,7 @@ class PostsController extends AbstractController
         foreach ($posts as $post) {
             $tempPostDataArray = [
                 'id' => $post->getPostId(),
-                'userId' => $post->getUser()->getUserId(),
+                'userName' => $post->getUserName(),
                 'title' => $post->getTitle(),
                 'body' => $post->getBody(),
             ];
@@ -34,29 +36,41 @@ class PostsController extends AbstractController
     public function deletePost(int $id, EntityManagerInterface $entityManager): RedirectResponse
     {
 
-        $response = '';
+        $message = '';
         $destination = '';
+
         //check if user is authenticated in session
         if ($this->getUser()) {
             //get post with {id} from database
-            $post = $entityManager->getRepository(Post::class)->findOneBy(['PostId' => $id]);
+            $post = $entityManager->getRepository(Post::class)->findOneBy(['postId' => $id]);
             //check if post exists and if so - remove it and send message
             if ($post) {
                 $entityManager->remove($post);
                 $entityManager->flush();
-                $response = 'Deleted post with id ' . $post->getPostId();
+                $message = 'Deleted post with id ' . $post->getPostId();
                 $destination = 'dashboard';
             } else {
-                $response = 'Post with id ' . $id . ' could not be found';
+                $message = "Post with id $id could not be found";
                 $destination = 'dashboard';
             }
         } else {
             //if we are not logged in, send back auth error.
-            $response = 'You are not logged in';
+            $message = 'You are not logged in';
             $destination = 'app_login';
         }
 
-        return $this->redirectToRoute($destination, ['response' => $response]);
+        return $this->redirectToRoute($destination, ['message' => $message]);
+    }
+
+    #[Route(path: "/posts/generate", name: "generate_posts_data")]
+    public function generatePostsData(EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $apiDataManager = new ApiDataManager($entityManager);
+        //storing information about how many entities has been created
+        $savedPosts = $apiDataManager->SavePostsFromApi();
+        $message = "Generated $savedPosts posts";
+        //send pure json string as a response
+        return $this->redirectToRoute('dashboard', ['message' => $message]);
     }
 }
 ?>

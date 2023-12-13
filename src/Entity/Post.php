@@ -2,12 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\PostsRepository;
+use App\Repository\PostRepository;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: PostsRepository::class)]
+#[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {
     #[ORM\Id]
@@ -15,18 +14,17 @@ class Post
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(unique: true)]
-    private ?int $PostId = null;
+    #[ORM\Column]
+    private ?int $postId = null;
 
-    #[ORM\ManyToOne(inversedBy: 'posts')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $User = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $Title = null;
+    #[ORM\Column(length: 60)]
+    private ?string $userName = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $Body = null;
+    private ?string $title = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $body = null;
 
     public function getId(): ?int
     {
@@ -35,48 +33,48 @@ class Post
 
     public function getPostId(): ?int
     {
-        return $this->PostId;
+        return $this->postId;
     }
 
-    public function setPostId(int $PostId): static
+    public function setPostId(int $postId): static
     {
-        $this->PostId = $PostId;
+        $this->postId = $postId;
 
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUserName(): ?string
     {
-        return $this->User;
+        return $this->userName;
     }
 
-    public function setUser(?User $User): static
+    public function setUserName(string $userName): static
     {
-        $this->User = $User;
+        $this->userName = $userName;
 
         return $this;
     }
 
     public function getTitle(): ?string
     {
-        return $this->Title;
+        return $this->title;
     }
 
-    public function setTitle(string $Title): static
+    public function setTitle(string $title): static
     {
-        $this->Title = $Title;
+        $this->title = $title;
 
         return $this;
     }
 
     public function getBody(): ?string
     {
-        return $this->Body;
+        return $this->body;
     }
 
-    public function setBody(string $Body): static
+    public function setBody(string $body): static
     {
-        $this->Body = $Body;
+        $this->body = $body;
 
         return $this;
     }

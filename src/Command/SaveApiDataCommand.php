@@ -35,15 +35,14 @@ class SaveApiDataCommand extends Command
     }
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        //api data manager used to download all the data from https://jsonplaceholder.typicode.com/posts and https://jsonplaceholder.typicode.com/users endpoint
+        //api data manager used to download all the data from https://jsonplaceholder.typicode.com/posts and user names in relation with https://jsonplaceholder.typicode.com/users endpoint
         $apiDataManager = new ApiDataManager($this->entityManager);
 
         //download data and get amount of entities created in database
-        $savedUsers = $apiDataManager->SaveUsersFromApi();
         $savedPosts = $apiDataManager->SavePostsFromApi();
 
         //output amount to the console
-        $output->writeln("Saved users: $savedUsers \nSaved posts: $savedPosts");
+        $output->writeln("Saved posts: $savedPosts");
 
 
         return Command::SUCCESS;

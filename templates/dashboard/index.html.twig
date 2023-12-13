@@ -3,9 +3,10 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
+<input id="GeneratePostsBtn" type="button" value="Generate Posts" onclick="window.location.href='{{ path('generate_posts_data') }}'">
 <div class="main-container">
-    {% if response|default(null) %}
-        <span>Last message: {{response}}</span>
+    {% if message|default(null) %}
+        <span>Last message: {{message}}</span>
     {% endif %}
     {% for sub_array in posts_data_array %}
     <div class="post-container">

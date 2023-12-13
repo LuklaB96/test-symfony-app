@@ -4,6 +4,7 @@
 
 {% block body %}
 <form method="post">
+<span>Need account? <a href={{ path('app_register')}}>Register</a></span>
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}

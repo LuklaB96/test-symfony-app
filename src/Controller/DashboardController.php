@@ -17,30 +17,35 @@ class DashboardController extends AbstractController
     public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
         //check if user is logged in
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        if ($this->getUser()) {
+            //get all posts ordered by id ascending
+            $posts = $entityManager->getRepository(Post::class)->findBy([], ['postId' => 'ASC']);
+            $postsDataArray = [];
 
-        //get all posts ordered by id ascending
-        $posts = $entityManager->getRepository(Post::class)->findBy([], ['postId' => 'ASC']);
-        $postsDataArray = [];
-
-        //organize data in array
-        foreach ($posts as $post) {
-            $tempPostDataArray = [
-                'id' => $post->getPostId(),
-                'user_name' => $post->getUserName(),
-                'title' => $post->getTitle(),
-                'body' => $post->getBody(),
-            ];
-            $postsDataArray[] = $tempPostDataArray;
-        }
-        //get url response parameter
-        $lastResponse = $request->query->get('message');
-        //check if exists
-        if (!$lastResponse) {
-            return $this->render('dashboard/index.html.twig', ['posts_data_array' => $postsDataArray]);
+            //organize data in array
+            foreach ($posts as $post) {
+                $tempPostDataArray = [
+                    'id' => $post->getPostId(),
+                    'user_name' => $post->getUserName(),
+                    'title' => $post->getTitle(),
+                    'body' => $post->getBody(),
+                ];
+                $postsDataArray[] = $tempPostDataArray;
+            }
+            //get url response parameter
+            $lastResponse = $request->query->get('message');
+            //check if exists
+            if (!$lastResponse) {
+                return $this->render('dashboard/index.html.twig', ['posts_data_array' => $postsDataArray]);
+            } else {
+                return $this->render('dashboard/index.html.twig', ['posts_data_array' => $postsDataArray, 'message' => $lastResponse]);
+            }
         } else {
-            return $this->render('dashboard/index.html.twig', ['posts_data_array' => $postsDataArray, 'message' => $lastResponse]);
+            //redirect to /login page if user not found
+            return $this->redirect('login');
         }
+
+
     }
     #[Route(path: "/", name: "main_page_redirect")]
     public function redirectPage(): RedirectResponse

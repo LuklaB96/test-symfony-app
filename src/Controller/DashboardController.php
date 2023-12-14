@@ -17,6 +17,7 @@ class DashboardController extends AbstractController
     public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
         //check if user is logged in
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
         if ($this->getUser()) {
             //get all posts ordered by id ascending
             $posts = $entityManager->getRepository(Post::class)->findBy([], ['postId' => 'ASC']);

@@ -19,6 +19,7 @@ class PostsController extends AbstractController
         $destination = '';
 
         //check if user is authenticated in session
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
         if ($this->getUser()) {
             //get post with {id} from database
             $post = $entityManager->getRepository(Post::class)->findOneBy(['postId' => $id]);
